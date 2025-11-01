@@ -1,0 +1,47 @@
+erDiagram
+    USER {
+        UUID id PK
+        string username
+        string email
+        string password_hash
+        boolean is_active
+        datetime created_at
+        datetime updated_at
+    }
+
+    ROLE {
+        UUID id PK
+        string name
+        string description
+        datetime created_at
+    }
+
+    USER_ROLE {
+        UUID id PK
+        UUID user_id FK
+        UUID role_id FK
+    }
+
+    TOKEN {
+        UUID id PK
+        UUID user_id FK
+        string token
+        string refresh_token
+        datetime issued_at
+        datetime expires_at
+        boolean is_revoked
+    }
+
+    AUDIT_LOG {
+        UUID id PK
+        UUID user_id FK
+        string action
+        string ip_address
+        datetime created_at
+    }
+
+    USER ||--o{ USER_ROLE : "has roles"
+    ROLE ||--o{ USER_ROLE : "belongs to"
+    USER ||--o{ TOKEN : "owns"
+    USER ||--o{ AUDIT_LOG : "creates"
+
