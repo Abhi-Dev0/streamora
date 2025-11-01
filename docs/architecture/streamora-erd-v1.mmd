@@ -1,0 +1,70 @@
+erDiagram
+    USERS {
+        uuid id PK
+        string email
+        string password_hash
+        datetime created_at
+    }
+
+    ROLES {
+        uuid id PK
+        string role_name
+    }
+
+    USER_ROLES {
+        uuid user_id FK
+        uuid role_id FK
+    }
+
+    UPLOAD_STATUS {
+        int id PK
+        string name
+    }
+
+    UPLOAD_SESSIONS {
+        uuid id PK
+        uuid uploader_id FK
+        string object_key
+        int status_id FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    SERIES {
+        uuid id PK
+        string title
+        string type
+        string description
+        string[] tags
+        uuid creator_id
+        datetime created_at
+    }
+
+    EPISODES {
+        uuid id PK
+        uuid series_id FK
+        string title
+        int duration_seconds
+        string hls_url
+        string[] thumbnails
+        string transcode_status
+        datetime published_at
+    }
+
+    WATCH_HISTORY {
+        uuid id PK
+        uuid user_id FK
+        uuid episode_id FK
+        int progress_seconds
+        datetime last_watched_at
+    }
+
+    USERS ||--o{ USER_ROLES : has
+    ROLES ||--o{ USER_ROLES : contains
+    USERS ||--o{ UPLOAD_SESSIONS : "initiates"
+    UPLOAD_STATUS ||--o{ UPLOAD_SESSIONS : "defines"
+    USERS ||--o{ WATCH_HISTORY : "records"
+    EPISODES ||--o{ WATCH_HISTORY : "is watched"
+    SERIES ||--o{ EPISODES : "contains"
+    USERS ||--o{ SERIES : "creates"
+
